@@ -172,22 +172,58 @@ void printListOrdered(List list)
 
 void copyList(List *L1, List *L2)
 {
-	printf("Mencoba untuk menyalin data...\n");
-	if(isListEmpty(*L1))
-	{
-		printf("List sumber kosong!\n");
-		return;
-	}
+    printf("Mencoba untuk menyalin data...\n");
+    if(isListEmpty(*L1))
+    {
+        printf("List sumber kosong!\n");
+        return;
+    }
 
-	address curr = L1->first;
-	
-	while(curr != NULL)
-	{
-		if(curr->nilai > 70)
-			createNode(L2, curr->nama, curr->nilai);
-		curr = curr->next;
-	}
-	printf("Data berhasil disalin!\n");
+    address curr = L1->first;
+
+    while(curr != NULL)
+    {
+        if(curr->nilai > 70)
+        {
+            address newNode = (address)malloc(sizeof(dataMahasiswa));
+            if(newNode == NULL)
+            {
+                printf("Memory gagal dialokasikan!\n");
+                return;
+            }
+
+            newNode->nama = (string)malloc(strlen(curr->nama) + 1);
+            if(newNode->nama == NULL)
+            {
+                printf("Memory untuk nama gagal dialokasikan!\n");
+                free(newNode);
+                return;
+            }
+
+            memcpy(newNode->nama, curr->nama, strlen(curr->nama) + 1);
+
+            newNode->nilai = curr->nilai;
+            newNode->next = NULL;
+
+            if(isListEmpty(*L2))
+            {
+                L2->first = newNode;
+            }
+            else
+            {
+                address temp = L2->first;
+                while(temp->next != NULL)
+                {
+                    temp = temp->next;
+                }
+                temp->next = newNode;
+            }
+
+            printf("Node berhasil disalin!\n");
+        }
+        curr = curr->next;
+    }
+    printf("Data berhasil disalin!\n");
 }
 
 void deleteDuplicate(List *list)
